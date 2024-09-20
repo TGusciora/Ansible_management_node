@@ -87,7 +87,7 @@ ip -6 neigh show
 
 WSL SSH connection Check
 1. Need to establish permissions and settings
-https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/
+https://devblogs.microsoft.com/commandline/automatically-configuring-wsl/  
 https://devblogs.microsoft.com/commandline/systemd-support-is-now-available-in-wsl/
 ```
 sudo vim /etc/wsl.conf
@@ -113,7 +113,9 @@ EOT
 ```
 
 ## WSL config on Windows - /users/user/.wslconfig file
-# https://learn.microsoft.com/en-us/windows/wsl/networking#mirrored-mode-networking
+
+https://learn.microsoft.com/en-us/windows/wsl/networking#mirrored-mode-networking
+.wslconfig file suggested content:
 ```
 [wsl2]
 networkingMode=mirrored
