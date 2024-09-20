@@ -1,0 +1,29 @@
+services:
+  ansible:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./ansible_playbooks:/ansible
+      - ./ansible_config:/ansible_config
+    environment:
+      - ANSIBLE_CONFIG=/ansible_config/ansible.cfg
+      - ANSIBLE_INVENTORY=/ansible_config/hosts
+    secrets:
+      - ssh_ansible_private_key
+      - ssh_ansible_public_key
+      - ssh_mikrus_private_key
+      - ssh_mikrus_public_key
+    network_mode: "host"  # Use host network mode for direct IPv6 connectivity
+    entrypoint: ["/usr/local/bin/docker-entrypoint.sh"]
+    command: tail -f /dev/null
+
+secrets:
+  ssh_ansible_private_key:
+    file: /mnt/c/users/tgusc/.ssh/id_ed25519
+  ssh_ansible_public_key:
+    file: /mnt/c/users/tgusc/.ssh/id_ed25519.pub
+  ssh_mikrus_private_key:
+    file: /mnt/c/users/tgusc/.ssh/mikrus
+  ssh_mikrus_public_key:
+    file: /mnt/c/users/tgusc/.ssh/mikrus.pub
