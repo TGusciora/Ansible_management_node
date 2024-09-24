@@ -51,5 +51,3 @@ mikrus_ipv6 ansible_host=2a01:4f9:6b:50ae::213
 ## [openSUSE]
 ## green.example.com
 ## blue.example.com
-
-

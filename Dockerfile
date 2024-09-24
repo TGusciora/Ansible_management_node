@@ -6,6 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Update and install necessary packages
 RUN apt-get update && apt-get install -y \
+	less \
     software-properties-common \
     openssh-client \
     python3-pip \
@@ -29,6 +30,10 @@ RUN mkdir -p /ansible_config
 # Copy the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Conditionally copy hosts and ansible.cfg
+COPY ansible_config/hosts* /ansible_config/hosts
+COPY ansible_config/ansible.cfg* /ansible_config/ansible.cfg
 
 # Set correct permissions for SSH keys
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh

@@ -92,7 +92,7 @@ copy_default_config() {
     local config_path="/ansible_config/$file"
 
     echo "Checking for $file..."
-    if [ ! -f "$config_path" ]; then
+    if [ ! -s "$config_path" ]; then
         echo "Copying default $file from $default_path to $config_path..."
         cp "$default_path" "$config_path"
         echo "Default $file copied successfully."
