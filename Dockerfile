@@ -22,24 +22,31 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Set the working directory
-WORKDIR /ansible
+WORKDIR /root/ansible_playbooks
+# add .ssh folder to working directory
+RUN mkdir -p /root/ansible_playbooks/.ssh
+# add permissions so ansible can run the code
+RUN chmod 700 /root/ansible_playbooks/.ssh
 
 # Create directory for Ansible configuration
-RUN mkdir -p /ansible_config
+RUN mkdir -p /root/ansible_config
 
 # Copy the entrypoint script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
+# copy playbooks
+COPY ansible_playbooks/site.yaml /root/ansible_playbooks/site.yaml
+
 # Conditionally copy hosts and ansible.cfg
-COPY ansible_config/hosts* /ansible_config/hosts
-COPY ansible_config/ansible.cfg* /ansible_config/ansible.cfg
+COPY ansible_config/hosts* /root/ansible_config/hosts
+COPY ansible_config/ansible.cfg* /root/ansible_config/ansible.cfg
 
 # Set correct permissions for SSH keys
 RUN mkdir -p /root/.ssh && chmod 700 /root/.ssh
 
-ENV ANSIBLE_CONFIG=/ansible_config/ansible.cfg
-ENV ANSIBLE_INVENTORY=/ansible_config/hosts
+ENV ANSIBLE_CONFIG=/root/ansible_config/ansible.cfg
+ENV ANSIBLE_INVENTORY=/root/ansible_config/hosts
 
 
 # Vim configuration - adding line numbers and syntax highlighting, backspace working as delete, invoke vim settings (newer) instaed of vi

@@ -9,7 +9,10 @@
 #   - A hostname/ip can be a member of multiple groups
 
 # Ex 1: Ungrouped hosts, specify before any group headers:
+[vps]
 mikrus_ipv6 ansible_host=2a01:4f9:6b:50ae::213
+[locals]
+local ansible_connection=local
 ## green.example.com
 ## blue.example.com
 ## 192.168.100.1

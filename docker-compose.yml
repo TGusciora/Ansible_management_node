@@ -4,11 +4,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./ansible_playbooks:/ansible
-      - ./ansible_config:/ansible_config
+      - ./ansible_playbooks:/root/ansible_playbooks
+      - ./ansible_config:/root/ansible_config
     environment:
-      - ANSIBLE_CONFIG=/ansible_config/ansible.cfg
-      - ANSIBLE_INVENTORY=/ansible_config/hosts
+      - ANSIBLE_CONFIG=/root/ansible_config/ansible.cfg
+      - ANSIBLE_INVENTORY=/root/ansible_config/hosts
     secrets:
       - ssh_ansible_private_key
       - ssh_ansible_public_key

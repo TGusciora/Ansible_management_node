@@ -148,3 +148,16 @@ ssh -A -p user@hostname/ip (działa)
 ```
 reset
 ```
+
+
+## Ansible commands
+
+1. Check connectivity to hosts
+```
+ansible all -m ping
+```
+
+2. In playbook folder - execute playbook site.yaml
+```
+ansible-playbook site.yaml
+```

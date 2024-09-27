@@ -89,7 +89,7 @@ echo "source /tmp/ssh-agent-env" >> /root/.bashrc
 copy_default_config() {
     local file=$1
     local default_path="/etc/ansible/$file"
-    local config_path="/ansible_config/$file"
+    local config_path="/root/ansible_config/$file"
 
     echo "Checking for $file..."
     if [ ! -s "$config_path" ]; then
@@ -108,8 +108,8 @@ copy_default_config "hosts"
 copy_default_config "ansible.cfg"
 
 # Ensure Ansible uses the correct config
-export ANSIBLE_CONFIG=/ansible_config/ansible.cfg
-export ANSIBLE_INVENTORY=/ansible_config/hosts
+export ANSIBLE_CONFIG=/root/ansible_config/ansible.cfg
+export ANSIBLE_INVENTORY=/root/ansible_config/hosts
 
 # Modify shell initialization
 echo "source /tmp/ssh-agent-env" >> /root/.bashrc
