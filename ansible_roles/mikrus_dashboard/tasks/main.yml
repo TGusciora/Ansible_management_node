@@ -1,0 +1,3 @@
+---
+# tasks file for mikrus_dashboard
+- include_tasks: setup-nginx.yml

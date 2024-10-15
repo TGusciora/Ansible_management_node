@@ -6,9 +6,11 @@ services:
     volumes:
       - ./ansible_playbooks:/root/ansible_playbooks
       - ./ansible_config:/root/ansible_config
+      - ./ansible_roles:/root/ansible_roles
     environment:
       - ANSIBLE_CONFIG=/root/ansible_config/ansible.cfg
       - ANSIBLE_INVENTORY=/root/ansible_config/hosts
+      - ANSIBLE_ROLES_PATH=/root/ansible_roles
     secrets:
       - ssh_ansible_private_key
       - ssh_ansible_public_key

@@ -1,0 +1,34 @@
+# porty
+# ostatnie 3 to polecane porty postgres i web
+open_ports:
+  - 22
+  - 20213
+  - 30213
+  - 40168
+  - 5432
+  - 80
+  - 443
+
+# Docker from role
+
+docker_edition: 'ce'
+docker_packages:
+    - "docker-{{ docker_edition }}"
+    - "docker-{{ docker_edition }}-cli"
+    - "docker-{{ docker_edition }}-rootless-extras"
+
+docker_packages_state: present
+
+docker_service_manage: true
+docker_service_state: started
+docker_service_enabled: true
+docker_restart_handler_state: restarted
+
+docker_install_compose_plugin: true
+docker_compose_package: docker-compose-plugin
+docker_compose_package_state: present
+
+docker_users:
+  - tgusc
+  - user1
+  - user2

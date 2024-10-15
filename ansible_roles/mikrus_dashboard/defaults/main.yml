@@ -1,0 +1,14 @@
+---
+# defaults file for mikrus_dashboard
+mikrus_dashboard_webserver: nginx
+
+mikrus_vhosts: []
+# example vhosts
+# mikrus_vhosts:
+#   - server_name: "pt.sits.ovh"
+#     db_name: db1
+#     db_username: usr1
+#     db_password: p12345
+#     state: present
+#   - server_name: "pt.sits.ovh2"
+#     state: absent

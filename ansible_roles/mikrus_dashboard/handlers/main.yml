@@ -1,0 +1,12 @@
+---
+# handlers file for mikrus_dashboard
+- name: restart nginx
+  service: name=nginx state=restarted
+
+# notify different handler to restart nginx
+# if many tasks notify the same handler - it will be run only once at the end of our playbook
+- name: validate nginx configuration and restart nginx
+  command: nginx -t -c /etc/nginx/nginx.conf
+  changed_when: true
+  notify:
+    - restart nginx

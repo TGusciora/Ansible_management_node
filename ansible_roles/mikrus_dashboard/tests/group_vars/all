@@ -1,0 +1,5 @@
+mikrus_vhosts:
+  - server_name: "pt.sits.ovh"
+    state: present
+  - server_name: "p2.sits.ovh2"
+    state: absent

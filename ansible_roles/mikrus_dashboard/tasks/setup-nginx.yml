@@ -1,0 +1,53 @@
+---
+- name: Install nginx
+  apt:
+    name: nginx
+    state: latest
+    update_cache: true
+
+- name: make sure that nginx is started
+  service:
+    name: nginx
+    state: started
+
+- name: Add managed vhost files.
+  template:
+    src: nginx-vhost.j2
+    dest: /etc/nginx/sites-available/{{ item.server_name }}
+    force: true
+    mode: 0644
+  when: item.state|default('present') != 'absent'
+  loop: "{{ mikrus_vhosts }}"
+
+- name: Add managed vhost config files.
+  template:
+    src: nginx-vhost.j2
+    dest: /etc/nginx/sites-available/{{ item.server_name }}
+    force: true
+    mode: 0644
+  when: item.state|default('present') != 'absent'
+  loop: "{{ mikrus_vhosts }}"
+  notify:
+    - validate nginx configuration and restart nginx
+
+# symlink catalogues sites-available and sites-enabled
+- name: enable nginx vhosts
+  file:
+    src: /etc/nginx/sites-available/{{ item.server_name }}
+    dest: /etc/nginx/sites-enabled/{{ item.server_name }}
+    state: link
+  when: item.state|default('present') != 'absent'
+  loop: "{{ mikrus_vhosts }}"
+  notify:
+    - validate nginx configuration and restart nginx
+
+# delete old vhosts
+# nested loop {{ item[0] }}{ item[1].server_name }}
+- name: cleanup managed vhost config files.
+  file:
+    path: "{{ item[0] }}{ item[1].server_name }}"
+    state: absent
+  when: item[1].state|default('present') == 'absent'
+  loop: "{{ [ '/etc/nginx/sites-available', '/etc/nginx/sites-enabled/']|product(mikrus_vhosts)|list }}"
+  notify:
+    - validate nginx configuration

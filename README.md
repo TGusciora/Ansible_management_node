@@ -140,7 +140,7 @@ ssh-add /mnt/c/users/tgusc/.ssh/mikrus
 ssh-add -l
 
 # Connecting with SSH via agent
-ssh -A -p user@hostname/ip (działa)
+ssh -A -p user@hostname/ip
 ```
 
 ## Possible issues
@@ -160,4 +160,13 @@ ansible all -m ping
 2. In playbook folder - execute playbook site.yaml
 ```
 ansible-playbook site.yaml
+```
+
+3. Run only tasks with certain tags from playbook - tag: firewall
+```
+ansible-playbook --tags firewall site.yaml
+```
+4. Initialize new role (predefined task list; do in roles directory) 
+```
+ansible-galaxy  init role-name
 ```
