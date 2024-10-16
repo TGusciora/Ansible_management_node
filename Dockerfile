@@ -21,6 +21,9 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install ansible-dev-tools and ansible-lint
+RUN pip3 install ansible-dev-tools ansible-lint
+
 # Set the working directory
 WORKDIR /root/ansible_playbooks
 # add .ssh folder to working directory

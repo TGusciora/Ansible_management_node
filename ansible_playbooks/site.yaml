@@ -1,3 +1,4 @@
+---
 - name: generate SSH key
   hosts: local
   vars:
@@ -21,7 +22,7 @@
         name: "{{ item }}"
         comment: "User {{ item }}"
         shell: /bin/bash/
-      loop: "{{ ssh_user }}" 
+      loop: "{{ ssh_user }}"
 
     - name: "Add authorized_keys for users"
       authorized_key:
@@ -52,10 +53,10 @@
         msg: "Docker installation from geerlingguy.docker role"
       tags: docker
   roles:
-    - { role: 'geerlingguy.docker', tags: 'docker' }
-    
+    - {role: 'geerlingguy.docker', tags: 'docker'}
+
   tasks:
-  
+
     - name: Install required packages
       apt:
         pkg:
@@ -64,23 +65,12 @@
         state: latest
         update_cache: true
       tags: docker_run
-      
+
     - name: install docker python module
       pip:
         name: docker
       tags: docker_run
-      
-    - name: pull nginx image
-      community.docker.docker_image:
-        name: nginx:latest
-        source: pull
 
-    - name: run nginx container
-      community.docker.docker_container:
-        name: nginx
-        image: nginx:latest
-        state: started
-        ports: "[::]:80:80"
-
-# in my case - if I use {} i have to use also " "
-# Ansible runs task by task
+- import_playbook: docker_apps.yml
+  # in my case - if I use {} i have to use also " "
+  # Ansible runs task by task

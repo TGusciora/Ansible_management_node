@@ -1,0 +1,86 @@
+---
+- name: Setup Dockerized Applications
+  hosts: vps
+  vars:
+    postgres_container_name: postgres_db
+    postgres_db_name: mydb
+    postgres_user: myuser
+    postgres_password: mypassword
+    python_container_name: python_app
+    nginx_container_name: nginx_proxy
+    n8n_container_name: n8n_workflow
+
+  tasks:
+    - name: Create a Docker network
+      community.docker.docker_network:
+        name: app_network
+        state: present
+
+    - name: Pull required Docker images
+      community.docker.docker_image:
+        name: "{{ item }}"
+        source: pull
+      loop:
+        - postgres:17
+        - python:3.13-bookworm
+        - nginx:1.27
+        - n8nio/n8n:latest
+
+    - name: Run Postgres container
+      community.docker.docker_container:
+        name: "{{ postgres_container_name }}"
+        image: postgres:17
+        state: started
+        restart_policy: always
+        env:
+          POSTGRES_DB: "{{ postgres_db_name }}"
+          POSTGRES_USER: "{{ postgres_user }}"
+          POSTGRES_PASSWORD: "{{ postgres_password }}"
+        networks:
+          - name: app_network
+
+    - name: Run Python container
+      community.docker.docker_container:
+        name: "{{ python_container_name }}"
+        image: python:3.13-bookworm
+        state: started
+        restart_policy: always
+        command: ["python", "-m", "http.server", "8000"]
+        env:
+          DB_HOST: "{{ postgres_container_name }}"
+          DB_NAME: "{{ postgres_db_name }}"
+          DB_USER: "{{ postgres_user }}"
+          DB_PASSWORD: "{{ postgres_password }}"
+        networks:
+          - name: app_network
+
+    - name: Run Nginx container
+      community.docker.docker_container:
+        name: "{{ nginx_container_name }}"
+        image: nginx:1.27
+        state: started
+        restart_policy: always
+        ports:
+          - "[::]:80:80"
+        networks:
+          - name: app_network
+
+    - name: Run n8n container
+      community.docker.docker_container:
+        name: "{{ n8n_container_name }}"
+        image: n8nio/n8n:latest
+        state: started
+        restart_policy: always
+        env:
+          N8N_HOST: "localhost"
+          N8N_PORT: "5678"
+          N8N_PROTOCOL: "http"
+          DB_TYPE: "postgresdb"
+          DB_POSTGRESDB_HOST: "{{ postgres_container_name }}"
+          DB_POSTGRESDB_DATABASE: "{{ postgres_db_name }}"
+          DB_POSTGRESDB_USER: "{{ postgres_user }}"
+          DB_POSTGRESDB_PASSWORD: "{{ postgres_password }}"
+        ports:
+          - "[::]:5678:5678"
+        networks:
+          - name: app_network

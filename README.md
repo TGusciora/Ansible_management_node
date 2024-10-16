@@ -170,3 +170,7 @@ ansible-playbook --tags firewall site.yaml
 ```
 ansible-galaxy  init role-name
 ```
+5. Use ansible-lint to check build robustness & correctness
+```
+ansible-galaxy  init role-name
+```
