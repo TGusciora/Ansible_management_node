@@ -170,7 +170,11 @@ ansible-playbook --tags firewall site.yaml
 ```
 ansible-galaxy  init role-name
 ```
-5. Use ansible-lint to check build robustness & correctness
+5. Install ansible role from ansible Galaxy (https://galaxy.ansible.com/ui/)
 ```
-ansible-galaxy  init role-name
+ansible-galaxy role install geerlingguy.postgresql -p /root/ansible_roles/
+```
+6. Use ansible-lint to check build robustness & correctness
+```
+ansible-lint site.yaml
 ```

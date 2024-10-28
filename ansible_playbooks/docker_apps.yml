@@ -4,13 +4,34 @@
   vars:
     postgres_container_name: postgres_db
     postgres_db_name: mydb
-    postgres_user: myuser
-    postgres_password: mypassword
+    postgres_user: Kataczan
+    postgres_password: Simping1234!
     python_container_name: python_app
     nginx_container_name: nginx_proxy
     n8n_container_name: n8n_workflow
 
   tasks:
+    # Add version checks for Docker images
+    - name: Check existing Docker images versions
+      community.docker.docker_image_info:
+        name: "{{ item }}"
+      register: image_info
+      loop:
+        - postgres:17
+        - python:3.13-bookworm
+        - nginx:1.27
+        - n8nio/n8n:latest
+
+    - name: Remove outdated Docker images
+      community.docker.docker_image:
+        name: "{{ item.item }}"
+        state: absent
+        force_absent: true
+      loop: "{{ image_info.results }}"
+      when: item.images | length > 0
+      loop_control:
+        label: "{{ item.item }}"
+
     - name: Create a Docker network
       community.docker.docker_network:
         name: app_network
@@ -26,6 +47,27 @@
         - nginx:1.27
         - n8nio/n8n:latest
 
+    # Add container version checks
+    - name: Get container information
+      community.docker.docker_container_info:
+        name: "{{ item }}"
+      register: container_info
+      loop:
+        - "{{ postgres_container_name }}"
+        - "{{ python_container_name }}"
+        - "{{ nginx_container_name }}"
+        - "{{ n8n_container_name }}"
+
+    - name: Remove existing containers if wrong version
+      community.docker.docker_container:
+        name: "{{ item.item }}"
+        state: absent
+        force_kill: true
+      loop: "{{ container_info.results }}"
+      when: item.exists
+      loop_control:
+        label: "{{ item.item }}"
+
     - name: Run Postgres container
       community.docker.docker_container:
         name: "{{ postgres_container_name }}"
@@ -36,6 +78,8 @@
           POSTGRES_DB: "{{ postgres_db_name }}"
           POSTGRES_USER: "{{ postgres_user }}"
           POSTGRES_PASSWORD: "{{ postgres_password }}"
+        ports:
+          - "[::]:40168:40168"
         networks:
           - name: app_network
 
